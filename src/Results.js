@@ -3,7 +3,8 @@ import { QuestionsContext } from "./TriviaContext"
 
 export default function Results() {
 
-    const {questions} = useContext(QuestionsContext)
+    const {gameState} = useContext(QuestionsContext)
+    const {questions, gameInProcess} = gameState
 
     const totalQuestions = questions.length
     let correctAnswers = 0
@@ -13,7 +14,11 @@ export default function Results() {
         }
     });
 
-    return(
-        <h5>{correctAnswers}/{totalQuestions}</h5>
-    )
+    if (gameInProcess === false && questions.length > 0) {
+        return(
+            <h5>Your result: {correctAnswers}/{totalQuestions}</h5>
+        )   
+    } else {
+        return null
+    }
 }

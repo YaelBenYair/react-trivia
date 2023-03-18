@@ -1,7 +1,7 @@
 import './App.css';
-import { useReducer, useState } from 'react';
+import { useReducer } from 'react';
 import QuestionsList from './QuestionsList';
-import {QuestionsContext, questionsReducer } from './TriviaContext';
+import {GAME_ACTIONS, INITIAL_GAME_STATE, QuestionsContext, questionsReducer } from './TriviaContext';
 import Results from './Results';
 import axios from 'axios';
 
@@ -9,28 +9,27 @@ import axios from 'axios';
 function App() {
 
   // const [questions, setQuestions] = useState([])
-  const [questions, dispatch] = useReducer(questionsReducer, [])
-
-  const [gameInProgress, setGameInProgress] = useState(false)
-
+  const [gameState, dispatch] = useReducer(questionsReducer, INITIAL_GAME_STATE)
 
   const handleStartGame = async () => {
-      const response = await axios.get("https://the-trivia-api.com/api/questions?limit=5")
-      if (response.status === 200) {
-              // setQuestions(response.data)
-              dispatch({
-                  type: 'start',
-                  questionsReceived: response.data
-              })
-              setGameInProgress(true)
-      }
+	dispatch({type: GAME_ACTIONS.QUESTIONS_FETCH_START})
+	const response = await axios.get("https://the-trivia-api.com/api/questions?limit=5")
+	if (response.status === 200) {
+		// setQuestions(response.data)
+		dispatch({
+			type: GAME_ACTIONS.QUESTIONS_FETCH_SUCCESS,
+			questionsReceived: response.data
+		})
+	} else {
+		dispatch({ type: GAME_ACTIONS.QUESTIONS_FETCH_ERROR, msg: response.statusText})
+	}
 
 
   }
 
   const handleSelectAnswer = (questionId, answer) => {
     dispatch({
-      type: 'selectAnswer',
+      type: GAME_ACTIONS.SELECT_ANSWER,
       questionId: questionId,
       answer: answer
     })
@@ -38,33 +37,42 @@ function App() {
 
   const handleResetAnswers = () => {
     dispatch({
-      type: 'resetAnswers'
+      type: GAME_ACTIONS.RESET_ANSWERS
     })
   }
 
   const handleSubmitGame = () => {
-    setGameInProgress(false)
+    dispatch({
+		type: GAME_ACTIONS.SUBMIT_ANSWERS
+	})
   }
+
+
 
   return (
       <div className='App'>
       <h3>TRIVIA GAME</h3>
 
-      {questions.length > 0 &&
-        <QuestionsContext.Provider value={{questions, handleSelectAnswer, handleSubmitGame, handleResetAnswers}}>
-          
-          {gameInProgress ?
-          	<QuestionsList />
-          :
-          	<Results />
-		  }
-          
-        </QuestionsContext.Provider>
-      }
+	  <QuestionsContext.Provider value={{gameState, handleSelectAnswer, handleSubmitGame, handleResetAnswers}}>
+		{gameState.loading ?
+			<p>Loading...</p>
+		:
+			<>
+				<QuestionsList />
+				<Results />
+			</>
+		}
 
-      {!gameInProgress &&
-        <button onClick={handleStartGame}>NEW GAME</button>
-      }
+		{gameState.errorMsg &&
+			<p style={{color: 'red'}}>{gameState.errorMsg}</p>
+		}
+          
+		  
+		{!gameState.gameInProcess &&
+        	<button onClick={handleStartGame} disabled={gameState.loading}>NEW GAME</button>
+		}
+
+	  </QuestionsContext.Provider>
     </div>
   );
 }
