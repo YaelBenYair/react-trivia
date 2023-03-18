@@ -1,9 +1,8 @@
-import { useContext } from "react"
-import { QuestionsContext } from "./TriviaContext"
+import { useGame } from "./TriviaContext"
 
 export default function Results() {
 
-    const {gameState} = useContext(QuestionsContext)
+    const gameState = useGame()
     const {questions, gameInProcess} = gameState
 
     const totalQuestions = questions.length

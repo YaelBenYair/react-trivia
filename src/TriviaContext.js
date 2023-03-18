@@ -1,14 +1,11 @@
-import { createContext } from "react";
+import { createContext, useContext, useReducer } from "react";
 
-export const QuestionsContext = createContext(null)
-
-export const INITIAL_GAME_STATE = {
+const INITIAL_GAME_STATE = {
     loading: false,
     errorMsg: null,
     gameInProcess: false,
     questions: []
 }
-
 
 export const GAME_ACTIONS = {
     QUESTIONS_FETCH_START: 'questionsFetchStart',
@@ -19,7 +16,7 @@ export const GAME_ACTIONS = {
     SUBMIT_ANSWERS: 'submitAnswers'
 }
 
-export function questionsReducer(gameState, action) {
+function gameReducer(gameState, action) {
     switch (action.type) {
 
         case GAME_ACTIONS.QUESTIONS_FETCH_START: {
@@ -83,3 +80,31 @@ export function questionsReducer(gameState, action) {
 
     }
 }
+
+const GameContext = createContext(INITIAL_GAME_STATE)
+const GameDispatchContext = createContext(null)
+
+
+export function GameProvider({ children }) {
+    const [gameState, dispatch] = useReducer(
+        gameReducer,
+        INITIAL_GAME_STATE
+    );
+  
+    return (
+        <GameContext.Provider value={gameState}>
+            <GameDispatchContext.Provider value={dispatch}>
+                {children}
+            </GameDispatchContext.Provider>
+        </GameContext.Provider>
+    );
+  }
+
+export function useGame() {
+    return useContext(GameContext);
+}
+  
+export function useGameDispatch() {
+    return useContext(GameDispatchContext);
+}
+

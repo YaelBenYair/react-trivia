@@ -1,9 +1,15 @@
-import { useContext } from "react"
-import { QuestionsContext } from "./TriviaContext"
+import { GAME_ACTIONS, useGameDispatch } from "./TriviaContext"
 
 export default function Question({question}) {
 
-    const {handleSelectAnswer} = useContext(QuestionsContext)
+    const dispatch = useGameDispatch()
+    const handleSelectAnswer = (answer) => {
+        dispatch({
+            type: GAME_ACTIONS.SELECT_ANSWER,
+            questionId: question.id,
+            answer: answer
+          })
+    }
 
     const allAnswers = question.incorrectAnswers.concat([question.correctAnswer])
     const answerItems = allAnswers.map(
@@ -14,7 +20,7 @@ export default function Question({question}) {
                         type='radio' 
                         value={answer} 
                         checked={question.selectedAnswer === answer}
-                        onChange={(event) => handleSelectAnswer(question.id, event.target.value)}/>
+                        onChange={(event) => handleSelectAnswer(event.target.value)}/>
                     <label>{answer}</label>
                     <br/>
                 </div>

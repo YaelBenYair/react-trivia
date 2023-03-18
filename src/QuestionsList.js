@@ -1,10 +1,12 @@
-import { useContext } from "react"
 import Question from "./Question"
-import { QuestionsContext } from "./TriviaContext"
+import { GAME_ACTIONS, useGame, useGameDispatch } from "./TriviaContext"
 
 export default function QuestionsList() {
 
-    const {gameState, handleSubmitGame, handleResetAnswers} = useContext(QuestionsContext)
+    // const {gameState, handleSubmitGame, handleResetAnswers} = useContext(QuestionsContext)
+
+    const gameState = useGame()
+    const dispatch = useGameDispatch()
     const {questions, gameInProcess} = gameState
     
     const items = questions.map(
@@ -13,11 +15,11 @@ export default function QuestionsList() {
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        handleSubmitGame()
+        dispatch({type: GAME_ACTIONS.SUBMIT_ANSWERS})
     }
 
     const handleReset = () => {
-        handleResetAnswers()
+        dispatch({type: GAME_ACTIONS.RESET_ANSWERS})
     }
 
     if (gameInProcess && questions.length > 0) {
