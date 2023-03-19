@@ -36,10 +36,17 @@ function App() {
     })
   }
 
+
+
+  // const handleResetAnswers = () => {
+  //   questions.forEach(q => {
+  //     q.selectedAnswer = ''
+  //   })
+  //   setQuestions([...questions])
+  // }
+
   const handleResetAnswers = () => {
-    dispatch({
-      type: 'resetAnswers'
-    })
+    dispatch({type: 'resetAnswers'})
   }
 
   const handleSubmitGame = () => {

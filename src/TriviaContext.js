@@ -19,6 +19,12 @@ export function questionsReducer(questions, action) {
             return [...questions]
         }
 
+        // const handleResetAnswers = () => {
+        //     questions.forEach(q => {
+        //       q.selectedAnswer = ''
+        //     })
+        //     setQuestions([...questions])
+        //   }
         case 'resetAnswers': {
             questions.forEach(q => {
                 q.selectedAnswer = ''
