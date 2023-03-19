@@ -1,14 +1,32 @@
 import './App.css';
 import {GameProvider} from './TriviaContext';
 import Game from './Game';
+import { Route, Routes } from 'react-router-dom';
+import Layout from './Layout/Layout';
+import SettingForm from './Filter/SettingsForm';
+import { useEffect } from 'react';
+
 
 
 function App() {
+
+	// useEffect(() =>
+
+	// )
+	
   
 	return(
-		<GameProvider>
-			<Game />
-		</GameProvider>
+		<>
+
+		<Routes>
+			<Route path='/' element={<Layout/>}>
+				<Route index element={<Game />}/>
+				<Route path='setting/' element={<SettingForm/>}/>
+				
+			</Route>
+		</Routes>
+
+		</>
 
     // <MyBox>
     //   <MyHeader></MyHeader>

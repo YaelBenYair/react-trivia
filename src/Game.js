@@ -2,6 +2,7 @@ import axios from "axios"
 import QuestionsList from "./QuestionsList"
 import Results from "./Results"
 import { GAME_ACTIONS, useGame, useGameDispatch } from "./TriviaContext"
+import { PARAMS, URL_QUESTIONS } from "./Urls"
 
 export default function Game() {
     
@@ -10,7 +11,8 @@ export default function Game() {
 
 	const handleStartGame = async () => {
 		dispatch({type: GAME_ACTIONS.QUESTIONS_FETCH_START})
-		const response = await axios.get("https://the-trivia-api.com/api/questions?limit=5")
+		console.log(PARAMS)
+		const response = await axios.get(URL_QUESTIONS , {params: {...PARAMS}})
 		if (response.status === 200) {
 			dispatch({
 				type: GAME_ACTIONS.QUESTIONS_FETCH_SUCCESS,
