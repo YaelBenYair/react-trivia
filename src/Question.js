@@ -3,6 +3,7 @@ import { GAME_ACTIONS, useGameDispatch } from "./TriviaContext"
 export default function Question({question}) {
 
     const dispatch = useGameDispatch()
+    
     const handleSelectAnswer = (answer) => {
         dispatch({
             type: GAME_ACTIONS.SELECT_ANSWER,
