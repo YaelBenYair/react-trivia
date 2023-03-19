@@ -12,6 +12,7 @@ function App() {
   const [gameState, dispatch] = useReducer(questionsReducer, INITIAL_GAME_STATE)
 
   const handleStartGame = async () => {
+    
 	dispatch({type: GAME_ACTIONS.QUESTIONS_FETCH_START})
 	const response = await axios.get("https://the-trivia-api.com/api/questions?limit=5")
 	if (response.status === 200) {
